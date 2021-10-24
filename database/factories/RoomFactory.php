@@ -22,10 +22,6 @@ class RoomFactory extends Factory
      */
     public function definition()
     {
-        return [
-            'desk_capacity' => $this->faker->numberBetween(3, 12),
-            'size' => $this->faker->numberBetween(2, 8),
-            'created_at' => now()
-        ];
+        
     }
 }

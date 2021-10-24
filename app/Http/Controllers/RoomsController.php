@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Room;
+use App\Models\Desk;
 
 class RoomsController extends Controller
 {
@@ -16,19 +17,11 @@ class RoomsController extends Controller
     public function index()
     {
         $rooms = Room::all();
-        return view('rooms/index', [
+        $response = [
+            'message' => 'All rooms',
             'rooms' => $rooms
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('rooms.create');
+        ];
+        return response()->json($response, 200);
     }
 
     /**
@@ -39,12 +32,17 @@ class RoomsController extends Controller
      */
     public function store(Request $request)
     {
-        $room = Room::create([
+        $room = new Room([
             'desk_capacity' => $request->input('desk_capacity'),
             'size' => $request->input('size')
         ]);
+        $room->save();
 
-        return redirect('/rooms');
+        $response = [
+            'message' => 'Room has been created',
+            'room' => $room
+        ];
+        return response()->json($response, 201);
 
     }
 
@@ -57,20 +55,11 @@ class RoomsController extends Controller
     public function show($id)
     {
         $room = Room::find($id);
-        $numberOfEntries = Room::where('id', '==', $room->id)->get();
-        return $numberOfEntries;
-        return view('rooms/show')->with('room', $room)->with('numberOfEntries', $numberOfEntries);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $response = [
+            'message' => 'Room information',
+            'room' => $room
+        ];
+        return response()->json($response, 200);
     }
 
     /**
@@ -82,7 +71,18 @@ class RoomsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $room = Room::find($id);
+
+        $room->desk_capacity = $request->input('desk_capacity');
+        $room->size = $request->input('size');
+        $room->room_manager = $request->input('room_manager');
+        $room->update();
+
+        $response = [
+            'message' => 'Room information updated',
+            'room' => $room
+        ];
+        return response()->json($response, 201);
     }
 
     /**
@@ -94,7 +94,13 @@ class RoomsController extends Controller
     public function destroy($id)
     {
         $room = Room::find($id)->first();
+        
+        $room->desks()->delete();
         $room->delete();
-        return redirect('/rooms');
+
+        $response = [
+            'message' => 'Room has been deleted'
+        ];
+        return response()->json($response, 200);
     }
 }

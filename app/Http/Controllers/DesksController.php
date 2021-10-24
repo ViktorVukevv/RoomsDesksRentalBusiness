@@ -16,18 +16,13 @@ class DesksController extends Controller
      */
     public function index()
     {
+        $desks = Desk::all();
+        $response = [
+            'message' => 'All desks',
+            'desks' => $desks
+        ];
+        return response()->json($response, 200);
         
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Room $rooms)
-    {
-        $rooms = Room::all();   
-        return view('desks/create')->with('rooms', $rooms);
     }
 
     /**
@@ -38,15 +33,20 @@ class DesksController extends Controller
      */
     public function store(Request $request)
     {
-        $desk = Desk::create([
+        $desk = new Desk([
             'room_id' => $request->input('room_id'),
             'price' => $request->input('price'),
             'size' => $request->input('size'),
             'position' => $request->input('position'),
-            'is_taken' => 0
+            'is_taken' => $request->input('is_taken')
         ]);
+        $desk->save();
 
-        return redirect('/rooms');
+        $response = [
+            'message' => 'Desk has been created',
+            'desk' => $desk
+        ];
+        return response()->json($response, 201);
     }
 
     /**
@@ -58,18 +58,11 @@ class DesksController extends Controller
     public function show($id)
     {
         $desk = Desk::find($id);
-        return view('desks/show')->with('desk', $desk);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $response = [
+            'message' => 'Desk information',
+            'desk' => $desk
+        ];
+        return response()->json($response, 200);
     }
 
     /**
@@ -81,7 +74,20 @@ class DesksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $desk = Desk::find($id);
+
+        $desk->room_id = $request->input('room_id');
+        $desk->price = $request->input('price');
+        $desk->size = $request->input('size');
+        $desk->position = $request->input('position');
+        $desk->is_taken = $request->input('is_taken');
+        $desk->update();
+
+        $response = [
+            'message' => 'Desk information updated',
+            'desk' => $desk
+        ];
+        return response()->json($response, 201);
     }
 
     /**
@@ -94,6 +100,10 @@ class DesksController extends Controller
     {
         $desk = Desk::find($id)->first();
         $desk->delete();
-        return redirect('/rooms');
+
+        $response = [
+            'message' => 'Desk has been deleted'
+        ];
+        return response()->json($response, 200);
     }
 }

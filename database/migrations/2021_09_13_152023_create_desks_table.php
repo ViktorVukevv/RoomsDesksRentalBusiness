@@ -15,16 +15,12 @@ class CreateDesksTable extends Migration
     {
         if (!Schema::hasTable('desks')) {
             Schema::create('desks', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('room_id')->unsigned();
-                $table->foreign('room_id')
-                    ->references('id')->on('rooms')
-                    ->onDelete('cascade');
+                $table->id();
+                $table->foreignId('room_id')->constrained('rooms');
                 $table->double('price');
                 $table->double('size');
                 $table->string('position');
-                $table->boolean('is_taken')->default(0);
-                $table->time('paid_time')->default(0);
+                $table->boolean('is_taken')->default(false);
                 $table->timestamps();
             });
         }

@@ -13,14 +13,13 @@ class CreateRoomsTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('rooms')) {
-            Schema::create('rooms', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('desk_capacity');
-                $table->string('size');
-                $table->timestamps();
-            });
-        }
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->id();
+            $table->integer('desk_capacity');
+            $table->string('size');
+            $table->foreignId('room_manager')->default('1')->constrained('users');
+            $table->timestamps();
+        });
     }
 
     /**

@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\authcontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomsController;
+use App\Http\Controllers\DesksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,15 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', [ApiController::class, 'login']);
-Route::post('register', [ApiController::class, 'register']);
+Route::post('login', [authcontroller::class, 'login']);
+Route::post('register', [authcontroller::class, 'register']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
-    Route::get('logout', [ApiController::class, 'logout']);
-    Route::get('get_user', [ApiController::class, 'get_user']);
+    Route::get('logout', [authcontroller::class, 'logout']);
+    Route::get('get_user', [authcontroller::class, 'get_user']);
 
     Route::resource('rooms', RoomsController::class);
     Route::post('rooms/assign', [RoomsController::class, 'assign']);
+    Route::post('desks/rent', [DesksController::class, 'rent']);
     Route::resource('desks', DesksController::class);
 });
 

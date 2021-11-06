@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Desk;
 use App\Models\Room;
+use App\Models\User;
 
 class DesksController extends Controller
 {
@@ -14,6 +15,13 @@ class DesksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth.role:admin');
+    }
+
+
     public function index()
     {
         $desks = Desk::all();
@@ -22,7 +30,6 @@ class DesksController extends Controller
             'desks' => $desks
         ];
         return response()->json($response, 200);
-        
     }
 
     /**
@@ -57,6 +64,16 @@ class DesksController extends Controller
      */
     public function show($id)
     {
+        $user = User::findOrFail(auth()->user()->getAuthIdentifier());
+
+        if ($user->room_id != $id) {
+            $response = [
+                'msg' => 'You haven\'t rent the desk yet.'
+            ];
+
+            return response()->json($response, 401);
+        }
+
         $desk = Desk::find($id);
         $response = [
             'message' => 'Desk information',
@@ -106,4 +123,32 @@ class DesksController extends Controller
         ];
         return response()->json($response, 200);
     }
+
+    public function rent(int $deskId, int $userId)
+    {
+        $desk = Desk::find($deskId);
+
+        if ($desk->is_taken) {
+
+            $response = [
+                'message' => 'You cannot rent this desk'
+            ];
+            return response()->json($response, 200);
+
+        } else {
+
+            $renter = User::find($userId);
+
+            $desk->user_id = $userId;
+
+            $response = [
+                'message' => 'You have successfully rented this desk!',
+                'desk' => $desk,
+                'renter' => $renter
+            ];
+
+            return response()->json($response, 201);
+        }
+    }
+    
 }

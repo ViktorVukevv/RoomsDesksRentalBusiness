@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Room;
 use App\Models\Desk;
+use App\Models\User;
 
 class RoomsController extends Controller
 {
@@ -54,6 +55,15 @@ class RoomsController extends Controller
      */
     public function show($id)
     {
+        $user = User::findOrFail(auth()->user()->getAuthIdentifier());
+
+        if ($user->room_id != $id) {
+            $response = [
+                'message' => 'You do not have access to this room!'
+            ];
+            return response()->json($response, 401);
+        }
+
         $room = Room::find($id);
         $response = [
             'message' => 'Room information',
@@ -102,5 +112,34 @@ class RoomsController extends Controller
             'message' => 'Room has been deleted'
         ];
         return response()->json($response, 200);
+    }
+
+    public function assign(int $roomId, int $roomManagerId){
+
+        $room_manager = User::findOrFail($roomManagerId);
+
+        if ($room_manager->role != 'room_manager') {
+            $room_manager->role = 'room_manager';
+        }
+        else {
+
+            $response = [
+                'message' => 'This user does not have such permission!'
+            ];
+
+            return response()->json($response, 400);
+        }
+
+        $room = Room::find($roomId);
+        
+        $room->room_manager_id = $roomManagerId;
+
+        $response = [
+            'message' => 'The room is assigned to the given user!',
+            'room' => $room,
+            'room_manager' => $room_manager
+        ];
+
+        return response()->json($response, 201);
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use CreateRoomsTable;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {

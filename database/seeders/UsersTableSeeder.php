@@ -14,26 +14,17 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = new User([
-            'name' => 'Viktor',
-            'email' => 'vikivukev@gmail.com',
-            'password' => bcrypt('123456'),
-            'role' => 'admin'
-        ]);
-        $user->save();
+        $users = array(
+            ['name' => 'Viktor', 'email' => 'vikivukev@gmail.com', 'password' => bcrypt('123456'), 'role' => 'admin'],
+            ['name' => 'Ivan', 'email' => 'ivancho@gmail.com', 'password' => bcrypt('123456')],
+            ['name' => 'Maria', 'email' => 'mariika@gmail.com', 'password' => bcrypt('123456')],
+            ['name' => 'Pesho', 'email' => 'pesho@gmail.com', 'password' => bcrypt('123456')]
+        );
 
-        $user = new User([
-            'name' => 'Ivan',
-            'email' => 'ivancho@gmail.com',
-            'password' => bcrypt('123456'),
-        ]);
-        $user->save();
-
-        $user = new User([
-            'name' => 'Maria',
-            'email' => 'mariika@gmail.com',
-            'password' => bcrypt('123456'),
-        ]);
-        $user->save();
+        foreach ($users as $user)
+        {
+            $user = new User($user);
+            $user->save();
+        }
     }
 }

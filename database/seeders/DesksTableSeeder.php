@@ -14,40 +14,17 @@ class DesksTableSeeder extends Seeder
      */
     public function run()
     {
-        $desk = new Desk([
-            'room_id' => 1,
-            'price' => 5,
-            'size' => 4.2,
-            'position' => 'next to the window',
-            'is_taken' => false
-        ]);
-        $desk->save();
+        $desks = array(
+            ['room_id' => 1, 'price' => 5, 'size' => 4.2, 'position' => 'next to the window', 'is_taken' => false],
+            ['room_id' => 2, 'price' => 4, 'size' => 3.2, 'position' => 'next to the door', 'is_taken' => false],
+            ['room_id' => 2, 'price' => 3, 'size' => 6.2, 'position' => 'next to the window', 'is_taken' => true],
+            ['room_id' => 1, 'price' => 4.5, 'size' => 7, 'position' => 'centre', 'is_taken' => true]
+        );
 
-        $desk = new Desk([
-            'room_id' => 2,
-            'price' => 4,
-            'size' => 3.2,
-            'position' => 'next to the door',
-            'is_taken' => false
-        ]);
-        $desk->save();
-
-        $desk = new Desk([
-            'room_id' => 2,
-            'price' => 3,
-            'size' => 6.2,
-            'position' => 'next to the window',
-            'is_taken' => true
-        ]);
-        $desk->save();
-
-        $desk = new Desk([
-            'room_id' => 1,
-            'price' => 4.5,
-            'size' => 7,
-            'position' => 'centre',
-            'is_taken' => true
-        ]);
-        $desk->save();
+        foreach ($desks as $desk)
+        {
+            $desk = new Desk($desk);
+            $desk->save();
+        }
     }
 }

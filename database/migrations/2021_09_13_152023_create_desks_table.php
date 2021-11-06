@@ -16,7 +16,7 @@ class CreateDesksTable extends Migration
         if (!Schema::hasTable('desks')) {
             Schema::create('desks', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('room_id')->constrained('rooms');
+                $table->foreignId('room_id')->default('1')->constrained('rooms');
                 $table->double('price');
                 $table->double('size');
                 $table->string('position');

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use App\Models\Room;
 
 class RoomsTest extends TestCase
@@ -12,10 +12,6 @@ class RoomsTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
-    {
-        $this->assertTrue(true);
-    }
 
     public function testRoomManagerShouldBeTheAdmin_IfNoRoomManagerIdIsGiven()
     {
@@ -27,6 +23,6 @@ class RoomsTest extends TestCase
 
         $room2 = Room::findOrFail($room->id);
 
-        $this->assertEquals('1', $room2->user_id);
+        $this->assertEquals('1', $room2->room_manager);
     }
 }

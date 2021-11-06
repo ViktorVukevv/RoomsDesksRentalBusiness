@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use App\Models\Desk;
 
 class DesksTest extends TestCase
@@ -12,23 +12,19 @@ class DesksTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
-    {
-        $this->assertTrue(true);
-    }
 
     public function test_create()
     {
         $desk = new Desk([
             'is_taken' => 100,
             'price' => 200.00,
-            'size' => 'medium',
+            'size' => 3.2,
             'position' => 'next to the window'
         ]);
         $desk->save();
 
         $desk = Desk::findOrFail($desk->id);
 
-        $this->assertEquals('medium', $desk->size);
+        $this->assertEquals(3.2, $desk->size);
     }
 }

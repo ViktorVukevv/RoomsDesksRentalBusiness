@@ -25,4 +25,21 @@ class RoomsTest extends TestCase
 
         $this->assertEquals('1', $room2->room_manager);
     }
+    
+    public function testRoomSizeUpdating()
+    {
+        $room = new Room([
+            'desk_capacity' => 100,
+            'size' => 'medium'
+        ]);
+        $room->save();
+
+        $room = Room::findOrFail($room->id);
+
+        $room->size = 'large';
+
+        $room->save();
+
+        $this->assertEquals('large', $room->size);
+    }
 }
